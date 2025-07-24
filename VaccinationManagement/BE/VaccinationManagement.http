@@ -1,0 +1,6 @@
+@VaccinationManagement_HostAddress = http://localhost:8888
+
+GET {{VaccinationManagement_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
