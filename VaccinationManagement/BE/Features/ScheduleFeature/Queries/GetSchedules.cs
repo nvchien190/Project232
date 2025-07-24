@@ -72,5 +72,7 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
         }
 
 
+
+
     }
 }

@@ -4,6 +4,7 @@ using VaccinationManagement.Features.ScheduleFeature.Queries;
 using VaccinationManagement.Features.ScheduleFeature.Commands;
 using VaccinationManagement.Models;
 using VaccinationManagement.Models.DTOs;
+using Humanizer;
 
 namespace VaccinationManagement.Controllers
 {
@@ -124,5 +125,22 @@ namespace VaccinationManagement.Controllers
                query = query
             }));
         }
+        [HttpGet("get-by-employeeId")]
+        public async Task<ActionResult<PaginatedList<Injection_Schedule>>> GetSchedulesByEmId([FromQuery] QueryGetScheduleByEmployeeDTO query)
+        {
+            var request = new GetSchedulesByEmployeeId
+            {
+                EmployeeId = query.EmployeeId,
+                query = query
+            };
+
+            var result = await _mediator.Send(request);
+            return Ok(result);
+        }
+
+
+
+
+
     }
 }
