@@ -20,17 +20,17 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
 
         public async Task<List<Customer>> Handle(GetCustomersNotInjectedInDayQuery request, CancellationToken cancellationToken)
         {
-            // Lấy tất cả khách hàng
+          
             var allCustomers = _context.Customers.Where(c => c.Status == true);
 
-            // Lấy danh sách khách hàng đã tiêm trong ngày
+            //khách hàng đã tiêm trong ngày
             var injectedCustomerIds = await _context.Injection_Results
                 .Where(r => r.Injection_Date == request.Date && r.IsVaccinated == ResultStatus.Injected)
                 .Select(r => r.Customer_Id)
                 .Distinct()
                 .ToListAsync(cancellationToken);
 
-            // Lọc ra khách hàng chưa tiêm trong ngày
+            //khách hàng chưa tiêm trong ngày
             var notInjectedCustomers = await allCustomers
                 .Where(c => !injectedCustomerIds.Contains(c.Id))
                 .ToListAsync(cancellationToken);

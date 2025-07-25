@@ -24,7 +24,13 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
 
             public async Task<Injection_Schedules_Paged> Handle(GetSchedulesWithPaginationQuery request, CancellationToken cancellationToken)
             {
-                var list = GetSchedules.IncludeVaccineWithoutCausingALoop(_context.Injection_Schedules);
+                
+                var list = _context.Injection_Schedules
+                    .Include(sche => sche.Vaccine)
+                    .Include(sche => sche.Place)
+                    .Include(sche => sche.CreatedByEmployee)
+                    .Include(sche => sche.PerformedByEmployee)
+                    .AsQueryable();
 
                 if (!string.IsNullOrEmpty(request.query.VaccineId))
                 {
@@ -72,6 +78,17 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
                 {
                     var date = request.query.ScheduleDate.Value;
                     list = list.Where(sche => sche.Start_Date <= date && sche.End_Date >= date);
+                }
+
+                // Lọc theo nhân viên tạo
+                if (!string.IsNullOrEmpty(request.query.CreatedByEmployeeId))
+                {
+                    list = list.Where(sche => sche.CreatedByEmployeeId == request.query.CreatedByEmployeeId);
+                }
+                // Lọc theo nhân viên thực hiện
+                if (!string.IsNullOrEmpty(request.query.PerformedByEmployeeId))
+                {
+                    list = list.Where(sche => sche.PerformedByEmployeeId == request.query.PerformedByEmployeeId);
                 }
 
                 var totalEntities = list.Count();

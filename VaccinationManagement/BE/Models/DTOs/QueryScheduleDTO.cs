@@ -7,6 +7,8 @@ namespace VaccinationManagement.Models.DTOs
         public string? VaccineName { get; set; }
         public string? PlaceName { get; set; }
         public DateOnly? ScheduleDate { get; set; } // Ngày cần tìm lịch tiêm
+        public string? CreatedByEmployeeId { get; set; } // Lọc theo nhân viên tạo
+        public string? PerformedByEmployeeId { get; set; } // Lọc theo nhân viên thực hiện
     }
 
     public class Injection_Schedules_Paged
@@ -21,6 +23,8 @@ namespace VaccinationManagement.Models.DTOs
 
         public bool HasNextPage { get; set; }
 
-        public virtual ICollection<Injection_Schedule>? Injection_Schedules { get; set; }
+    
+       public virtual ICollection<Injection_Schedule>? Injection_Schedules { get; set; }
+
     }
 }
