@@ -44,7 +44,7 @@ namespace VaccinationManagement.Controllers
 		}
 
 		[HttpGet("annual-vaccine")]
-		public async Task<IActionResult> GetAnnualVaccineSummary(int year, string customerId)
+		public async Task<IActionResult> GetAnnualVaccineSummary(int ?year, string customerId)
 		{
 			var result = await _mediator.Send(
 				new GetCustomerAnnualVaccineQuery

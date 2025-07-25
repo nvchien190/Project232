@@ -13,7 +13,7 @@ namespace VaccinationManagement.Features.CustomerFeature.Queries
 
 	public class GetCustomerAnnualVaccineQuery : IRequest<List<AnnualVaccineResponse>>
 	{
-		public required int Year { get; set; }
+		public required int ?Year { get; set; }
 		public required string CustomerId { get; set; }
 
 		public class GetCustomerAnnualVaccine : IRequestHandler<GetCustomerAnnualVaccineQuery, List<AnnualVaccineResponse>>
@@ -25,23 +25,31 @@ namespace VaccinationManagement.Features.CustomerFeature.Queries
             }
             public async Task<List<AnnualVaccineResponse>> Handle(GetCustomerAnnualVaccineQuery request, CancellationToken cancellationToken)
 			{
-				int year = request.Year;
-				var totalInjectionVisits = await _context.Injection_Results
-					.CountAsync(i => i.Customer_Id == request.CustomerId
-					&& i.Injection_Date.HasValue && i.Injection_Date.Value.Year ==  year, cancellationToken);
-				var result = await _context.Injection_Results
-					.Where(i => i.Customer_Id == request.CustomerId &&
-					i.Injection_Date.HasValue && i.Injection_Date.Value.Year == year)
-					.GroupBy(i => i.Vaccine!.Vaccine_Name)
-					.Select(g => new AnnualVaccineResponse
-					{
-						VaccineName = g.Key,
-						TotalInject = g.Sum(i => i.Number_Of_Injection),
-						TotalInjectionVisits = totalInjectionVisits
-					})
-					.ToListAsync(cancellationToken);
-				return result;
-			}
-		}
+                int? year = request.Year;
+
+                // Bước lọc có điều kiện năm
+                var query = _context.Injection_Results.Where(i => i.Customer_Id == request.CustomerId && i.Injection_Date.HasValue);
+
+                if (year.HasValue)
+                {
+                    query = query.Where(i => i.Injection_Date!.Value.Year == year.Value);
+                }
+
+                var totalInjectionVisits = await query.CountAsync(cancellationToken);
+
+                var result = await query
+                    .GroupBy(i => i.Vaccine!.Vaccine_Name)
+                    .Select(g => new AnnualVaccineResponse
+                    {
+                        VaccineName = g.Key,
+                        TotalInject = g.Sum(i => i.Number_Of_Injection),
+                        TotalInjectionVisits = totalInjectionVisits
+                    })
+                    .ToListAsync(cancellationToken);
+
+                return result;
+
+            }
+        }
 	}
 }
