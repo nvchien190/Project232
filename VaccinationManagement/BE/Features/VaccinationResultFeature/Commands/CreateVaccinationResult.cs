@@ -32,6 +32,20 @@ namespace VaccinationManagement.Features.VaccinationResultFeature.Commands
 
             public async Task<ActionResult<Injection_Result>> Handle(CreateVaccinationResultQuery request, CancellationToken cancellationToken)
             {
+                // Giảm số lượng vaccine
+                var vaccine = await _context.Vaccines.FindAsync(request.Vaccine_Id);
+                if (vaccine == null)
+                {
+                    return new BadRequestObjectResult("Vaccine not found");
+                }
+                int reduceQuantity = 1; 
+                if (vaccine.Number_Of_Injection == null || vaccine.Number_Of_Injection < reduceQuantity)
+                {
+                    return new BadRequestObjectResult("Insufficient vaccine stock");
+                }
+                vaccine.Number_Of_Injection -= reduceQuantity;
+                _context.Vaccines.Update(vaccine);
+
                 var result = new Injection_Result
                 {
                     Id = request.Id,
