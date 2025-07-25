@@ -67,6 +67,13 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
                             );
                 }
 
+                // Lọc theo ngày chỉ định nếu có
+                if (request.query.ScheduleDate.HasValue)
+                {
+                    var date = request.query.ScheduleDate.Value;
+                    list = list.Where(sche => sche.Start_Date <= date && sche.End_Date >= date);
+                }
+
                 var totalEntities = list.Count();
 
                 list = list.OrderBy(sche => sche.Id)

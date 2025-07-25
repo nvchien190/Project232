@@ -138,6 +138,13 @@ namespace VaccinationManagement.Controllers
             return Ok(result);
         }
 
+        [HttpGet("customers-not-injected-in-day")]
+        public async Task<ActionResult<List<Customer>>> GetCustomersNotInjectedInDay([FromQuery] DateOnly date)
+        {
+            var result = await _mediator.Send(new GetCustomersNotInjectedInDayQuery { Date = date });
+            return Ok(result);
+        }
+
 
 
 

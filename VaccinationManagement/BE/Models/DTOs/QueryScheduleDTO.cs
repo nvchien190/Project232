@@ -6,6 +6,7 @@ namespace VaccinationManagement.Models.DTOs
         public string? VaccineId { get; set; }
         public string? VaccineName { get; set; }
         public string? PlaceName { get; set; }
+        public DateOnly? ScheduleDate { get; set; } // Ngày cần tìm lịch tiêm
     }
 
     public class Injection_Schedules_Paged
