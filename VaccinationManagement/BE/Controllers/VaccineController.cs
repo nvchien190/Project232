@@ -279,7 +279,7 @@ namespace VaccinationManagement.Controllers
         {
             return Ok(await _mediator.Send(request));
         }
-
+        //
         [HttpPut("reduce-quantity")]
         public async Task<IActionResult> ReduceVaccineQuantity([FromBody] ReduceVaccineQuantity command)
         {

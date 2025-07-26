@@ -8,6 +8,7 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
     public class GetCustomersNotInjectedInDayQuery : IRequest<List<Customer>>
     {
         public required DateOnly Date { get; set; }
+        public bool IncludeInjected { get; set; } = false; 
     }
 
     public class GetCustomersNotInjectedInDayHandler : IRequestHandler<GetCustomersNotInjectedInDayQuery, List<Customer>>
@@ -20,22 +21,33 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
 
         public async Task<List<Customer>> Handle(GetCustomersNotInjectedInDayQuery request, CancellationToken cancellationToken)
         {
-          
             var allCustomers = _context.Customers.Where(c => c.Status == true);
 
-            //khách hàng đã tiêm trong ngày
+            
             var injectedCustomerIds = await _context.Injection_Results
                 .Where(r => r.Injection_Date == request.Date && r.IsVaccinated == ResultStatus.Injected)
                 .Select(r => r.Customer_Id)
                 .Distinct()
                 .ToListAsync(cancellationToken);
 
-            //khách hàng chưa tiêm trong ngày
-            var notInjectedCustomers = await allCustomers
-                .Where(c => !injectedCustomerIds.Contains(c.Id))
-                .ToListAsync(cancellationToken);
+            if (request.IncludeInjected)
+            {
+                //Uninject
+                var notInjectedCustomers = await allCustomers
+                    .Where(c => !injectedCustomerIds.Contains(c.Id))
+                    .ToListAsync(cancellationToken);
 
-            return notInjectedCustomers;
+                return notInjectedCustomers;
+            }
+            else
+            {
+                // inject
+                var injectedCustomers = await allCustomers
+                    .Where(c => injectedCustomerIds.Contains(c.Id))
+                    .ToListAsync(cancellationToken);
+
+                return injectedCustomers;
+            }
         }
     }
 } 

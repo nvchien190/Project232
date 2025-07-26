@@ -178,7 +178,7 @@ namespace VaccinationManagement.Controllers
                 return StatusCode(500, new { message = "An error occurred while changing the password" });
             }
         }
-
+        // import excel
         [HttpPost("import")]
         public async Task<IActionResult> ImportEmployees([FromForm] ImportEmployee command)
         {
@@ -198,7 +198,7 @@ namespace VaccinationManagement.Controllers
                 return BadRequest(new { error = "Failed to import employee. Double check the data and try again." });
             }
         }
-
+        //download sample excel
         [HttpGet("download-sample")]
         public IActionResult DownloadSampleFile()
         {

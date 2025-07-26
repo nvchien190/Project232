@@ -39,7 +39,7 @@ namespace VaccinationManagement.Features.VaccineFeature.Commands
                     return "Place not found";
                 }
 
-                // Check for valid Quantity_Imported
+                // Check for valid Quantity_Imported.
                 if (command.Quantity_Imported <= 0)
                 {
                     return "Quantity imported must be greater than zero";

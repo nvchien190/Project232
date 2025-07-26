@@ -27,7 +27,7 @@ namespace VaccinationManagement.Features.CustomerFeature.Queries
 			{
                 int? year = request.Year;
 
-                // Bước lọc có điều kiện năm
+                // filter by year
                 var query = _context.Injection_Results.Where(i => i.Customer_Id == request.CustomerId && i.Injection_Date.HasValue);
 
                 if (year.HasValue)
@@ -46,7 +46,6 @@ namespace VaccinationManagement.Features.CustomerFeature.Queries
                         TotalInjectionVisits = totalInjectionVisits
                     })
                     .ToListAsync(cancellationToken);
-
                 return result;
 
             }

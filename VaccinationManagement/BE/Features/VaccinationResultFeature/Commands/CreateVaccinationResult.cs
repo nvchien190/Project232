@@ -32,7 +32,7 @@ namespace VaccinationManagement.Features.VaccinationResultFeature.Commands
 
             public async Task<ActionResult<Injection_Result>> Handle(CreateVaccinationResultQuery request, CancellationToken cancellationToken)
             {
-                // Giảm số lượng vaccine
+                // reduce number vaccine
                 var vaccine = await _context.Vaccines.FindAsync(request.Vaccine_Id);
                 if (vaccine == null)
                 {

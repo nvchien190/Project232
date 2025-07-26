@@ -117,6 +117,13 @@ namespace VaccinationManagement.Controllers
             return CreatedAtAction("GetSchedule", new { id = schedule.Id }, schedule);
         }
 
+        [HttpPost("send-vaccination-reminder")]
+        public async Task<IActionResult> SendVaccinationReminder([FromQuery] DateOnly date)
+        {
+            await _mediator.Send(new VaccinationManagement.Features.EmailFeature.Command.SendVaccinationReminderCommand { Date = date });
+            return Ok("Đã gửi nhắc lịch tiêm cho khách hàng có lịch tiêm vào ngày mai!");
+        }
+
         [HttpGet("get-by-vaccineId")]
         public async Task<ActionResult<IEnumerable<Injection_Schedule>>> GetSchedulesByVaccineId([FromQuery] QueryGetSchedulesByVaccineIdDTO query)
         {
@@ -139,9 +146,9 @@ namespace VaccinationManagement.Controllers
         }
 
         [HttpGet("customers-not-injected-in-day")]
-        public async Task<ActionResult<List<Customer>>> GetCustomersNotInjectedInDay([FromQuery] DateOnly date)
+        public async Task<ActionResult<List<Customer>>> GetCustomersNotInjectedInDay([FromQuery] DateOnly date, [FromQuery] bool includeInjected = false)
         {
-            var result = await _mediator.Send(new GetCustomersNotInjectedInDayQuery { Date = date });
+            var result = await _mediator.Send(new GetCustomersNotInjectedInDayQuery { Date = date, IncludeInjected = includeInjected });
             return Ok(result);
         }
 

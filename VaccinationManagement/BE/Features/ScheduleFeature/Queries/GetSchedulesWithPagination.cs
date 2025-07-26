@@ -73,19 +73,19 @@ namespace VaccinationManagement.Features.ScheduleFeature.Queries
                             );
                 }
 
-                // Lọc theo ngày chỉ định nếu có
+                // filter by date
                 if (request.query.ScheduleDate.HasValue)
                 {
                     var date = request.query.ScheduleDate.Value;
                     list = list.Where(sche => sche.Start_Date <= date && sche.End_Date >= date);
                 }
 
-                // Lọc theo nhân viên tạo
+                // filter create emp id
                 if (!string.IsNullOrEmpty(request.query.CreatedByEmployeeId))
                 {
                     list = list.Where(sche => sche.CreatedByEmployeeId == request.query.CreatedByEmployeeId);
                 }
-                // Lọc theo nhân viên thực hiện
+                //  filter performed emp id 
                 if (!string.IsNullOrEmpty(request.query.PerformedByEmployeeId))
                 {
                     list = list.Where(sche => sche.PerformedByEmployeeId == request.query.PerformedByEmployeeId);
